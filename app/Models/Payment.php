@@ -18,6 +18,11 @@ class Payment extends Model
         'debt_id',
     ];
 
+    protected $casts = [
+        'date' => 'date', // Cast 'date' to a Carbon instance
+        'amount' => 'integer', // Cast amount to integer if it's stored as such
+    ];
+
     public function student()
     {
         return $this->belongsTo(Student::class);

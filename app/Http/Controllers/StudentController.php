@@ -12,15 +12,11 @@ use Inertia\Inertia;
 class StudentController extends Controller
 {
     public function index(){
-        $groupStudents = Student::with( 'groups')->get();
-        $students = Student::all();
-
+        $students = Student::with('groups')->get();
         return Inertia::render('Students/Student', [
             'students' => $students,
-            'groupStudents' => $groupStudents,
         ]);
     }
-
 
 
     public function show($id){
@@ -67,26 +63,30 @@ class StudentController extends Controller
     public function edit($id)
     {
         $student = Student::findOrFail($id);
+        $groups = Group::all();
 
         return Inertia::render('Students/StudentUpdate', [
-            'student' => $student
+            'student' => $student,
+            'groups' => $groups,
         ]);
     }
 
     public function update(Request $request, $id)
     {
-        $data = request()->validate([
+        $validated = $request->validate([
             'full_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:15',
-            'birth_date' => 'required|date',
-            'balance' => 'required|numeric|min:0',
+            'phone' => 'required|string',
+            'birth_date' => 'nullable|date',
+            'balance' => 'required|numeric',
+            'group_id' => 'nullable|exists:groups,id',
         ]);
 
         $student = Student::findOrFail($id);
-        $student->update($data);
+        $student->update($validated);
 
-        return redirect()->route('students.index')->with('success', 'Student updated successfully.');
+        return redirect()->route('students.index')->with('success', 'Talaba yangilandi!');
     }
+
     public function destroy($id)
     {
         $student = Student::findOrFail($id);

@@ -28,6 +28,18 @@ const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Oquvchilar',
         href: '/students',
+    },
+    {
+        title: 'Tolovlar',
+        href: '/payments',
+    },
+    {
+        title: 'Qarzlar',
+        href: '/debts',
+    },
+    {
+        title: 'Sozlamalar',
+        href: '/settings',
     }
 ];
 </script>

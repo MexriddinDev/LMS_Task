@@ -67,17 +67,17 @@
                             <div class="text-gray-500 dark:text-gray-400">{{ formatPhone(student.phone) }}</div>
                         </td>
                         <td class="p-3 text-sm">
-                            <div class="text-gray-500 dark:text-gray-400">
+                            <div class="flex flex-wrap gap-1">
                                 <template v-if="student.groups && student.groups.length > 0">
-                                    <div
-                                        v-for="group in student.groups"
-                                        :key="group.id"
-                                        class="inline-block bg-gray-200 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-200 mr-1 mb-1"
-                                    >
-                                        {{ group.name }}
-                                    </div>
+                              <span
+                                  v-for="group in student.groups"
+                                  :key="group.id"
+                                  class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300"
+                              >
+                                {{ group.name }}
+                              </span>
                                 </template>
-
+                                <span v-else class="text-gray-400 italic">Guruh biriktirilmagan</span>
                             </div>
                         </td>
 

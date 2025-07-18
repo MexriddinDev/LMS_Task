@@ -93,7 +93,7 @@
                             <select
                                 id="group"
                                 v-model="form.group_id"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:text-gray-200 bg-white dark:bg-gray-800"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:text-gray-200 bg-white dark:bg-gray-950"
                                 :required="groups.length > 0"
                             >
                                 <option value="">--- Guruhni tanlang ---</option>
