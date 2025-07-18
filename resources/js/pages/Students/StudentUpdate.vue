@@ -7,14 +7,14 @@
                 <Link :href="route('students.index')" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-400">
                     <i class="fas fa-arrow-left text-xl"></i>
                 </Link>
-                <h1 class="text-2xl font-bold">Tarbiyalanuvchini tahrirlash</h1>
+                <h1 class="text-2xl font-bold">O'quvchini tahrirlash</h1>
             </div>
 
-            <p class="text-gray-900 dark:text-gray-400">Mavjud tarbiyalanuvchi hisobini tahrirlang</p>
+            <p class="text-gray-900 dark:text-gray-400">Mavjud o'quvchi hisobini tahrirlang</p>
 
             <form @submit.prevent="submitForm" class="space-y-6">
                 <div class="p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
-                    <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Tarbiyalanuvchi ma'lumotlari</h2>
+                    <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">O'quvchi ma'lumotlari</h2>
 
                     <div class="flex items-center gap-6">
                         <div class="w-24 h-24 rounded-full border border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden">
@@ -96,7 +96,7 @@
                     </Link>
                     <Button type="submit" :disabled="form.processing" class="bg-white text-black px-5 py-2 rounded-lg hover:bg-gray-100 dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-colors duration-200">
                         <span v-if="form.processing">Yangilanmoqda...</span>
-                        <span v-else>Tarbiyalanuvchini yangilash</span>
+                        <span v-else>O'quvchini yangilash</span>
                     </Button>
                 </div>
             </form>
@@ -191,10 +191,10 @@ const submitForm = () => {
             // No need to reset the form on success for an update,
             // as the current data should remain
             // You might want to show a success message or redirect
-            console.log('Tarbiyalanuvchi muvaffaqiyatli yangilandi!');
+            console.log('Oquvchi muvaffaqiyatli yangilandi!');
         },
         onError: (errors) => {
-            console.error('Tarbiyalanuvchini yangilashda xato:', errors);
+            console.error('Oquvchini yangilashda xato:', errors);
         },
     });
 };

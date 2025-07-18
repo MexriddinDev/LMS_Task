@@ -4,20 +4,19 @@
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-4 space-y-4 text-gray-800 dark:text-gray-200">
             <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold">Tarbiyalanuvchilar</h1>
+                <h1 class="text-2xl font-bold">O'quvchilar</h1>
                 <Link :href="route('students.create')">
                     <Button class="bg-white text-black border border-gray-300 hover:bg-gray-100 dark:bg-white dark:text-black dark:border-gray-600 dark:hover:bg-gray-200 px-5 py-2.5 rounded-lg transition-colors duration-200">
-                        + Tarbiyalanuvchi qo‘shish
+                        + O'quvchi qo‘shish
                     </Button>
                 </Link>
             </div>
 
-            <p class="text-gray-600 dark:text-gray-400">Tarbiyalanuvchilar ma'lumotlari va ro'yxatga olishni boshqarish</p>
 
             <div class="grid grid-cols-3 gap-4 ">
                 <Card class="border-gray-200 shadow-sm dark:border-gray-700">
                     <CardHeader>
-                        <CardTitle class="text-gray-500 text-base dark:text-gray-400">Jami tarbiyalanuvchilar</CardTitle>
+                        <CardTitle class="text-gray-500 text-base dark:text-gray-400">Jami o'quvchilar</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <h2 class="text-2xl font-semibold text-black dark:text-white">{{ displayedStudents.length }}</h2>
@@ -25,7 +24,7 @@
                 </Card>
                 <Card class="border-green-200 shadow-sm dark:border-green-700">
                     <CardHeader>
-                        <CardTitle class="text-gray-500 text-base dark:text-gray-400">Faol tarbyalanuvchilar</CardTitle>
+                        <CardTitle class="text-gray-500 text-base dark:text-gray-400">Faol o'quvchilar</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <h2 class="text-2xl font-semibold text-green-600 dark:text-green-400">{{ displayedStudents.length }}</h2>
@@ -33,7 +32,7 @@
                 </Card>
                 <Card class="border-red-200 shadow-sm dark:border-red-700">
                     <CardHeader>
-                        <CardTitle class="text-gray-500 text-base dark:text-gray-400">Nofaol tarbiyalanuvchilar</CardTitle>
+                        <CardTitle class="text-gray-500 text-base dark:text-gray-400">Nofaol o'quvchilar</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <h2 class="text-2xl font-semibold text-red-600 dark:text-red-400">{{ 0 }}</h2>
@@ -65,7 +64,7 @@
                             </div>
                         </td>
                         <td class="p-3 text-sm">
-                            <div class="text-gray-500 dark:text-gray-400">{{ student.phone }}</div>
+                            <div class="text-gray-500 dark:text-gray-400">{{ formatPhone(student.phone) }}</div>
                         </td>
                         <td class="p-3 text-sm">
                             <div class="text-gray-500 dark:text-gray-400">
@@ -91,27 +90,35 @@
                         <td class="p-3 text-sm">
                             <div class="text-gray-500 dark:text-gray-400">{{ formatDate(student.created_at) }}</div>
                         </td>
-                        <td class="p-3 flex items-center gap-2">
-                            <Link :href="route('students.show', student.id)" title="Ko'rish">
-                                <Button variant="ghost" size="icon" title="Ko‘rish" class="dark:text-gray-400 dark:hover:bg-gray-700">
-                                    <i class="fas fa-eye text-gray-600 text-sm dark:text-gray-400"></i>
-                                </Button>
-                            </Link>
+                        <td class="p-3">
+                            <div class="flex items-center gap-2">
+                                <!-- Ko‘rish -->
+                                <Link :href="route('students.show', student.id)" title="Ko‘rish">
+                                    <Button variant="outline" size="icon" class="dark:hover:bg-gray-700">
+                                        <i class="fas fa-eye text-gray-600 text-sm dark:text-gray-300"></i>
+                                    </Button>
+                                </Link>
 
-                            <Link :href="route('students.edit', student.id)" title="Tahrirlash">
-                                <Button variant="ghost" size="icon" class="dark:text-gray-400 dark:hover:bg-gray-700">
-                                    <i class="fas fa-pen text-gray-600 text-sm dark:text-gray-400"></i>
+                                <!-- Tahrirlash -->
+                                <Link :href="route('students.edit', student.id)" title="Tahrirlash">
+                                    <Button variant="outline" size="icon" class="dark:hover:bg-gray-700">
+                                        <i class="fas fa-pen text-gray-600 text-sm dark:text-gray-300"></i>
+                                    </Button>
+                                </Link>
+
+                                <!-- O‘chirish -->
+                                <Button variant="outline" size="icon" title="O‘chirish"
+                                        class="dark:hover:bg-gray-700"
+                                        @click="confirmDelete(student.id)">
+                                    <i class="fas fa-trash text-red-500 text-sm dark:text-red-400"></i>
                                 </Button>
-                            </Link>
-                            <Button variant="ghost" size="icon" title="O‘chirish" class="dark:text-gray-400 dark:hover:bg-gray-700"
-                                    @click="confirmDelete(student.id)">
-                                <i class="fas fa-trash text-red-500 text-sm dark:text-red-400"></i>
-                            </Button>
+                            </div>
                         </td>
+
                     </tr>
                     <tr v-if="displayedStudents.length === 0">
                         <td colspan="7" class="p-3 text-center text-gray-500 dark:text-gray-400">
-                            Hozircha hech qanday tarbiyalanuvchi yo‘q.
+                            Hozircha hech qanday o'quvchi yo‘q.
                         </td>
                     </tr>
                     </tbody>
@@ -141,11 +148,9 @@ interface Student {
     birth_date: string | null;
     balance: number;
     created_at: string;
-    // MUHIM: Student modelida 'groups' munosabati eager load qilinganda bu yerda bo'lishi kerak
-    groups?: Group[]; // Talaba tegishli bo'lgan guruhlar massivi
+    groups?: Group[];
 }
 
-// GroupStudent interfeysi (agar kerak bo'lsa, lekin bu komponentda to'g'ridan-to'g'ri ishlatilmayapti)
 interface GroupStudent {
     id: number;
     group_id: number;
@@ -155,16 +160,13 @@ interface GroupStudent {
     student?: Student;
 }
 
-// Props'larni qabul qilish
 const props = defineProps<{
     students: Student[];
     groups: Array<{ id: number; name: string }>;
 }>();
 
-// displayedStudents ni props.students bilan boshlash
 const displayedStudents = ref<Student[]>(props.students);
 
-// Sanani formatlash funksiyasi
 const formatDate = (dateString: string) => {
     if (!dateString) return '';
     try {
@@ -179,7 +181,6 @@ const formatDate = (dateString: string) => {
     }
 };
 
-// Pul miqdorini formatlash funksiyasi
 const formatCurrency = (amount: number) => {
     const formattedAmount = new Intl.NumberFormat('uz-UZ', {
         minimumFractionDigits: 0,
@@ -188,21 +189,16 @@ const formatCurrency = (amount: number) => {
     return `${formattedAmount} UZS`;
 };
 
-// O'chirishni tasdiqlash funksiyasi
 const confirmDelete = (id: number) => {
-    // alert() o'rniga ogohlantirish uchun custom modal yoki toast ishlatish tavsiya etiladi
-    // Hozircha oddiy confirm() ishlatilgan.
-    if (confirm("Haqiqatan ham ushbu tarbiaylanuvchini o'chirmoqchimisiz?")) {
+    if (confirm("Haqiqatan ham ushbu o'quvchini o'chirmoqchimisiz?")) {
         router.delete(route('students.destroy', id), {
             onSuccess: () => {
-                // Muvaffaqiyatli o'chirilgandan so'ng, talabani ro'yxatdan olib tashlaymiz
                 displayedStudents.value = displayedStudents.value.filter(student => student.id !== id);
-                console.log('Tarbiaylanuvchi muvaffaqiyatli o‘chirildi! 👍');
-                // Foydalanuvchiga xabar berish uchun toast notification qo'shishingiz mumkin
+                console.log('Oquvchi muvaffaqiyatli o‘chirildi! 👍');
             },
             onError: (errors) => {
-                console.error('Tarbiaylanuvchini o‘chirishda xatolik yuz berdi: ❗', errors);
-                let errorMessage = 'Tarbiaylanuvchini o‘chirishda xatolik yuz berdi.';
+                console.error('Oquvchini o‘chirishda xatolik yuz berdi: ❗', errors);
+                let errorMessage = 'Oquvchini o‘chirishda xatolik yuz berdi.';
                 if (errors && Object.keys(errors).length > 0) {
                     errorMessage += "\n" + Object.values(errors).join("\n");
                 } else {
@@ -215,21 +211,33 @@ const confirmDelete = (id: number) => {
     }
 };
 
+const formatPhone = (phone: string) => {
+    const digits = phone.replace(/\D/g, '');
+
+    if (digits.length === 9) {
+        return `${digits.slice(0, 2)}-${digits.slice(2, 5)}-${digits.slice(5, 7)}-${digits.slice(7)}`;
+    }
+
+    if (digits.length === 12 && digits.startsWith('998')) {
+        const local = digits.slice(3);
+        return `${local.slice(0, 2)}-${local.slice(2, 5)}-${local.slice(5, 7)}-${local.slice(7)}`;
+    }
+
+    return phone;
+};
 // Breadcrumbs ma'lumotlari
 const breadcrumbs = [
     { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Tarbiyalanuvchilar', href: '/students' }
+    { title: 'Oquvchilar', href: '/students' }
 ]
 </script>
 
 <style scoped>
-/* Font Awesome ikonkalari uchun CSS import qilinadi */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 
-/* Guruh nomlari uchun kichik stil */
 .inline-block {
     display: inline-block;
-    margin-right: 4px; /* Kichik bo'shliq */
-    margin-bottom: 4px; /* Kichik bo'shliq */
+    margin-right: 4px;
+    margin-bottom: 4px;
 }
 </style>

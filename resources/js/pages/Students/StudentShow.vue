@@ -39,7 +39,7 @@
                             <div>
                                 <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ student.full_name }}</h3>
                                 <div class="text-gray-600 dark:text-gray-400 flex items-center gap-2 mt-1 text-sm">
-                                    <i class="fas fa-phone text-xs"></i> <span>{{ student.phone || 'Berilmagan' }}</span>
+                                    <i class="fas fa-phone text-xs"></i> <span>{{ formatPhone(student.phone) || 'Berilmagan' }}</span>
                                 </div>
                                 <div class="text-gray-600 dark:text-gray-400 flex items-center gap-2 mt-1 text-sm">
                                     <i class="fas fa-coins text-xs"></i> <span>Balans: {{ formatCurrency(student.balance) }}</span>
@@ -183,6 +183,20 @@ const confirmDelete = (id: number) => {
             }
         });
     }
+};
+const formatPhone = (phone: string) => {
+    const digits = phone.replace(/\D/g, '');
+
+    if (digits.length === 9) {
+        return `${digits.slice(0, 2)}-${digits.slice(2, 5)}-${digits.slice(5, 7)}-${digits.slice(7)}`;
+    }
+
+    if (digits.length === 12 && digits.startsWith('998')) {
+        const local = digits.slice(3);
+        return `${local.slice(0, 2)}-${local.slice(2, 5)}-${local.slice(5, 7)}-${local.slice(7)}`;
+    }
+
+    return phone;
 };
 
 const breadcrumbs = computed(() => [

@@ -80,23 +80,31 @@
                                 Faol
                             </span>
                         </td>
-                        <td class="p-3 flex items-center gap-2">
-                            <Link :href="route('groups.show', group.id)" title="Ko'rish">
-                                <Button variant="ghost" size="icon" class="dark:text-gray-400 dark:hover:bg-gray-700">
-                                    <i class="fas fa-eye text-gray-600 text-sm dark:text-gray-400"></i>
-                                </Button>
-                            </Link>
+                        <td class="p-3">
+                            <div class="flex items-center gap-2">
+                                <!-- Ko‘rish -->
+                                <Link :href="route('groups.show', group.id)" title="Ko‘rish">
+                                    <Button variant="outline" size="icon" class="dark:hover:bg-gray-700">
+                                        <i class="fas fa-eye text-gray-600 text-sm dark:text-gray-300"></i>
+                                    </Button>
+                                </Link>
 
-                            <Link :href="route('groups.edit', group.id)" title="Tahrirlash">
-                                <Button variant="ghost" size="icon" class="dark:text-gray-400 dark:hover:bg-gray-700">
-                                    <i class="fas fa-pen text-gray-600 text-sm dark:text-gray-400"></i>
+                                <!-- Tahrirlash -->
+                                <Link :href="route('groups.edit', group.id)" title="Tahrirlash">
+                                    <Button variant="outline" size="icon" class="dark:hover:bg-gray-700">
+                                        <i class="fas fa-pen text-gray-600 text-sm dark:text-gray-300"></i>
+                                    </Button>
+                                </Link>
+
+                                <!-- O‘chirish -->
+                                <Button variant="outline" size="icon" title="O‘chirish"
+                                        class="dark:hover:bg-gray-700"
+                                        @click="deleteConfirmation(group.id, group.name)">
+                                    <i class="fas fa-trash text-red-500 text-sm dark:text-red-400"></i>
                                 </Button>
-                            </Link>
-                            <Button variant="ghost" size="icon" title="O‘chirish" class="dark:text-gray-400 dark:hover:bg-gray-700"
-                                    @click="deleteConfirmation(group.id, group.name)">
-                                <i class="fas fa-trash text-red-500 text-sm dark:text-red-400"></i>
-                            </Button>
+                            </div>
                         </td>
+
                     </tr>
                     <tr v-if="groups.length === 0">
                         <td colspan="7" class="p-4 text-center text-gray-500 dark:text-gray-400">

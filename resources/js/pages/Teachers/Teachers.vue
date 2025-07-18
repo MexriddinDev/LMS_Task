@@ -62,7 +62,7 @@
                             </div>
                         </td>
                         <td class="p-3 text-sm">
-                            <div class="text-gray-500 dark:text-gray-400">{{ teacher.phone }}</div>
+                            <div class="text-gray-500 dark:text-gray-400">{{ formatPhone(teacher.phone) }}</div>
                         </td>
                         <td class="p-3">
                             <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100">
@@ -75,23 +75,31 @@
                         <td class="p-3 text-sm">
                             <div class="text-gray-500 dark:text-gray-400">{{ formatDate(teacher.created_at) }}</div>
                         </td>
-                        <td class="p-3 flex items-center gap-2">
-                            <Link :href="route('teachers.show', teacher.id)" title="Ko'rish">
-                                <Button variant="ghost" size="icon" title="Ko‘rish" class="dark:text-gray-400 dark:hover:bg-gray-700">
-                                    <i class="fas fa-eye text-gray-600 text-sm dark:text-gray-400"></i>
-                                </Button>
-                            </Link>
+                        <td class="p-3">
+                            <div class="flex items-center gap-2">
+                                <!-- Ko‘rish -->
+                                <Link :href="route('teachers.show', teacher.id)" title="Ko‘rish">
+                                    <Button variant="outline" size="icon" class="dark:hover:bg-gray-700">
+                                        <i class="fas fa-eye text-gray-600 text-sm dark:text-gray-300"></i>
+                                    </Button>
+                                </Link>
 
-                            <Link :href="route('teachers.edit', teacher.id)" title="Tahrirlash">
-                                <Button variant="ghost" size="icon" class="dark:text-gray-400 dark:hover:bg-gray-700">
-                                    <i class="fas fa-pen text-gray-600 text-sm dark:text-gray-400"></i>
+                                <!-- Tahrirlash -->
+                                <Link :href="route('teachers.edit', teacher.id)" title="Tahrirlash">
+                                    <Button variant="outline" size="icon" class="dark:hover:bg-gray-700">
+                                        <i class="fas fa-pen text-gray-600 text-sm dark:text-gray-300"></i>
+                                    </Button>
+                                </Link>
+
+                                <!-- O‘chirish -->
+                                <Button variant="outline" size="icon" title="O‘chirish"
+                                        class="dark:hover:bg-gray-700"
+                                        @click="confirmDelete(teacher.id)">
+                                    <i class="fas fa-trash text-red-500 text-sm dark:text-red-400"></i>
                                 </Button>
-                            </Link>
-                            <Button variant="ghost" size="icon" title="O‘chirish" class="dark:text-gray-400 dark:hover:bg-gray-700"
-                                    @click="confirmDelete(teacher.id)">
-                                <i class="fas fa-trash text-red-500 text-sm dark:text-red-400"></i>
-                            </Button>
+                            </div>
                         </td>
+
                     </tr>
                     </tbody>
                 </table>
@@ -134,7 +142,23 @@ const confirmDelete = (id: number) => {
                 alert('Xodimni o‘chirishda xatolik yuz berdi. Konsolni tekshiring.');
             }
         });
+
+
     }
+};
+const formatPhone = (phone: string) => {
+    const digits = phone.replace(/\D/g, '');
+
+    if (digits.length === 9) {
+        return `${digits.slice(0, 2)}-${digits.slice(2, 5)}-${digits.slice(5, 7)}-${digits.slice(7)}`;
+    }
+
+    if (digits.length === 12 && digits.startsWith('998')) {
+        const local = digits.slice(3);
+        return `${local.slice(0, 2)}-${local.slice(2, 5)}-${local.slice(5, 7)}-${local.slice(7)}`;
+    }
+
+    return phone;
 };
 
 const breadcrumbs = [

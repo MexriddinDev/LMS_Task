@@ -26,7 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/groups',
     },
     {
-        title: 'Tarbiyalanuvchilar',
+        title: 'Oquvchilar',
         href: '/students',
     }
 ];

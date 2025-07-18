@@ -33,7 +33,7 @@ const mainNavItems: NavItem[] = [
         icon: Users,
     },
     {
-        title: 'Tarbiyalanuvchilar',
+        title: 'Oquvchilar',
         href: '/students',
         icon: GraduationCapIcon,
     },

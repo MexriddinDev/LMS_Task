@@ -49,7 +49,7 @@
                                     <i class="fas fa-at text-sm"></i> <span>example@mail.com</span>
                                 </div>
                                 <div class="text-gray-600 dark:text-gray-400 flex items-center gap-2 mt-1">
-                                    <i class="fas fa-mobile-alt text-sm"></i> <span>{{ teacher.phone }}</span>
+                                    <i class="fas fa-mobile-alt text-sm"></i> <span>{{ formatPhone(teacher.phone) }}</span>
                                 </div>
                                 <div class="text-gray-600 dark:text-gray-400 flex items-center gap-2 mt-1">
                                     <i class="fas fa-building text-sm"></i> <span>Markaziy filial</span>
@@ -203,6 +203,20 @@ const deleteTeacher = (id: number, name: string) => {
             }
         });
     }
+};
+const formatPhone = (phone: string) => {
+    const digits = phone.replace(/\D/g, '');
+
+    if (digits.length === 9) {
+        return `${digits.slice(0, 2)}-${digits.slice(2, 5)}-${digits.slice(5, 7)}-${digits.slice(7)}`;
+    }
+
+    if (digits.length === 12 && digits.startsWith('998')) {
+        const local = digits.slice(3);
+        return `${local.slice(0, 2)}-${local.slice(2, 5)}-${local.slice(5, 7)}-${local.slice(7)}`;
+    }
+
+    return phone;
 };
 </script>
 
