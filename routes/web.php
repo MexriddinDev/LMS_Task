@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DebtController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\PaymentController;
@@ -12,15 +13,14 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
-Route::get('dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-Route::resource('teachers', TeacherController::class );
-Route::resource('students', StudentController::class );
-Route::resource('groups', GroupController::class );
-Route::resource('debts', DebtController::class );
-Route::resource('payments', PaymentController::class );
-
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('teachers', TeacherController::class);
+    Route::resource('students', StudentController::class);
+    Route::resource('groups', GroupController::class);
+    Route::resource('debts', DebtController::class);
+    Route::resource('payments', PaymentController::class);
+});
 
 
 require __DIR__.'/settings.php';

@@ -48,7 +48,7 @@
                         <th class="p-3 text-left text-sm font-semibold">Tarbiyalanuvchi</th>
                         <th class="px-8 py-3 text-right text-sm font-semibold">Miqdor</th> <th class="px-8 py-3 text-left text-sm font-semibold">To'lov usuli</th> <th class="p-3 text-center text-sm font-semibold">Holati</th>
                         <th class="p-3 text-left text-sm font-semibold">Sana</th>
-                        <th class="p-3 text-center text-sm font-semibold">Harakatlar</th>
+<!--                        <th class="p-3 text-center text-sm font-semibold">Harakatlar</th>-->
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -83,16 +83,16 @@
                         <td class="p-3 text-sm text-gray-600 dark:text-gray-300 text-left">{{ formatDate(payment.date) }}</td>
                         <td class="p-3 text-sm text-center">
                             <div class="flex items-center justify-center gap-2">
-                                <Link :href="route('payments.show', payment.id)" title="Ko‘rish">
-                                    <Button variant="outline" size="icon" class="border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        <i class="fas fa-eye text-gray-600 dark:text-gray-300 text-sm"></i>
-                                    </Button>
-                                </Link>
-                                <Link :href="route('payments.edit', payment.id)" title="Tahrirlash">
-                                    <Button variant="outline" size="icon" class="border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        <i class="fas fa-pen text-gray-600 dark:text-gray-300 text-sm"></i>
-                                    </Button>
-                                </Link>
+<!--                                <Link :href="route('payments.show', payment.id)" title="Ko‘rish">-->
+<!--                                    <Button variant="outline" size="icon" class="border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">-->
+<!--                                        <i class="fas fa-eye text-gray-600 dark:text-gray-300 text-sm"></i>-->
+<!--                                    </Button>-->
+<!--                                </Link>-->
+<!--                                <Link :href="route('payments.edit', payment.id)" title="Tahrirlash">-->
+<!--                                    <Button variant="outline" size="icon" class="border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">-->
+<!--                                        <i class="fas fa-pen text-gray-600 dark:text-gray-300 text-sm"></i>-->
+<!--                                    </Button>-->
+<!--                                </Link>-->
                             </div>
                         </td>
                     </tr>

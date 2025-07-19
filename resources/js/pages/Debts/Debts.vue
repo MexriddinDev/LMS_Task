@@ -5,11 +5,6 @@
         <div class="p-4 space-y-4 text-gray-800 dark:text-gray-200">
             <div class="flex justify-between items-center">
                 <h1 class="text-2xl font-bold">Qarzlar</h1>
-<!--                <Link :href="route('debts.create')">-->
-<!--                    <Button class="bg-white text-gray-800 border border-gray-300 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-50 dark:border-gray-700 dark:hover:bg-gray-800 px-5 py-2.5 rounded-lg shadow-sm dark:shadow-lg transition-colors duration-200">-->
-<!--                        + Qarz qo‘shish-->
-<!--                    </Button>-->
-<!--                </Link>-->
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -48,11 +43,12 @@
                         <th class="p-3 text-left">Guruh</th>
                         <th class="p-3 text-left">Miqdor</th>
                         <th class="p-3 text-left">Holat</th>
-                        <th class="p-3 text-left">Yaratilgan sana</th> </tr>
+                        <th class="p-3 text-left">Yaratilgan sana</th>
+                    </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                     <tr v-for="debt in debts" :key="debt.id" class="hover:bg-gray-50 dark:hover:bg-gray-950 transition-colors duration-200">
-                        <td class="p-3 text-gray-800 dark:text-gray-200">{{ generateDebtCode(debt.id) }}</td>
+                        <td class="p-3 text-gray-800 dark:text-gray-200">{{ generateDebtCode(debt.id, debt.created_at) }}</td>
                         <td class="p-3 text-gray-800 dark:text-gray-200">{{ debt.student?.full_name || 'Nomaʼlum' }}</td>
                         <td class="p-3 text-gray-800 dark:text-gray-200">{{ debt.group?.name || 'Guruhsiz' }}</td>
                         <td class="p-3 text-gray-800 dark:text-gray-200">{{ formatCurrency(debt.amount) }}</td>
@@ -70,10 +66,7 @@
                                 <i class="fas fa-hourglass-half text-yellow-500 dark:text-yellow-400"></i> To‘lanmagan
                             </div>
                         </td>
-                        <td class="p-3 text-gray-800 dark:text-gray-200">{{ formatDate(debt.created_at) }}</td> <td class="p-3">
-                        <div class="flex gap-2">
-                        </div>
-                    </td>
+                        <td class="p-3 text-gray-800 dark:text-gray-200">{{ formatDate(debt.created_at) }}</td>
                     </tr>
                     <tr v-if="debts.length === 0">
                         <td colspan="7" class="p-4 text-center text-gray-500 bg-gray-100 dark:bg-gray-950 dark:text-gray-400 transition-colors duration-200">Hech qanday qarz mavjud emas.</td>
@@ -90,6 +83,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { onMounted, onUnmounted } from 'vue'; // onMounted va onUnmounted import qilindi
 
 interface Group {
     id: number;
@@ -104,9 +98,8 @@ interface Debt {
     student_id: number;
     student: Student;
     amount: number;
-    due_date: string | null; // Keep due_date for type consistency if it exists in data, though not displayed
-    created_at: string; // Add created_at property
-    status: 'paid' | 'unpaid';
+    due_date: string | null;
+    created_at: string;
     is_paid: boolean;
     group: Group;
 }
@@ -119,12 +112,11 @@ const props = defineProps<{
 
 function formatDate(dateString: string | null): string {
     if (!dateString) {
-        return ''; // Return empty string if dateString is null or empty
+        return '';
     }
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
-        // Check if the date is actually invalid (e.g., "Invalid Date" object)
-        return 'Yaroqsiz sana'; // Or a more user-friendly message
+        return 'Yaroqsiz sana';
     }
     return date.toLocaleDateString('uz-UZ', {
         year: 'numeric',
@@ -141,16 +133,21 @@ function formatCurrency(amount: number) {
     }).format(amount) + ' so‘m';
 }
 
-function generateDebtCode(id: number) {
-    const today = new Date();
-    const date = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+// generateDebtCode funksiyasi endi created_at ni qabul qiladi
+function generateDebtCode(id: number, createdAt: string): string {
+    const debtDate = new Date(createdAt); // Qarzning yaratilgan sanasidan foydalanamiz
+    const year = debtDate.getFullYear();
+    const month = String(debtDate.getMonth() + 1).padStart(2, '0');
+    const day = String(debtDate.getDate()).padStart(2, '0');
+    const datePart = `${year}${month}${day}`;
+
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let hash = '';
     for (let i = 0; i < 6; i++) {
-        const index = (id * (i + 2)) % chars.length;
+        const index = (id * (i + 2)) % chars.length; // ID va iteratsiya asosida xash generatsiyasi
         hash += chars[index];
     }
-    return `DEBT-${date}-${hash}`;
+    return `DEBT-${datePart}-${hash}`;
 }
 
 function confirmDelete(id: number) {
@@ -163,6 +160,20 @@ const breadcrumbs = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Qarzlar', href: '/debts' },
 ];
+
+// Test uchun avtomatik yangilash (FAQAT RIVOJLANISH UCHUN)
+let refreshInterval: number;
+
+onMounted(() => {
+    // Har 10 soniyada sahifani qayta yuklash
+    refreshInterval = setInterval(() => {
+        router.reload({ preserveScroll: true }); // Sahifani yangilaydi
+    }, 10000); // 10 soniya
+});
+
+onUnmounted(() => {
+    clearInterval(refreshInterval); // Komponent o'chirilganda intervalni tozalash
+});
 </script>
 
 <style scoped>
