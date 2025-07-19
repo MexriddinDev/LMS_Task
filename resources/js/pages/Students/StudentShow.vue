@@ -13,7 +13,12 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                    Guruh: <span class="font-medium text-gray-900 dark:text-white">Katta guruh</span>
+                    Guruh: <span class="font-medium text-gray-900 dark:text-white">
+                        <span v-if="student.groups && student.groups.length > 0">
+                            {{ student.groups.map(g => g.name).join(', ') }}
+                        </span>
+                        <span v-else>Guruh tayinlanmagan</span>
+                    </span>
                 </div>
             </div>
 
@@ -58,7 +63,12 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Tayinlangan guruh</label>
-                                <p class="font-semibold text-gray-900 dark:text-white">Katta guruh</p>
+                                <p class="font-semibold text-gray-900 dark:text-white">
+                                    <span v-if="student.groups && student.groups.length > 0">
+                                        {{ student.groups.map(g => g.name).join(', ') }}
+                                    </span>
+                                    <span v-else>Guruh tayinlanmagan</span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -99,8 +109,12 @@
                             <Link :href="route('students.edit', student.id)" class="flex items-center w-full text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-300 text-sm font-medium">
                                 <i class="fas fa-pen mr-3 text-base"></i> Tarbiyalanuvchini tahrirlash
                             </Link>
-                            <Link href="#" class="flex items-center w-full text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-300 text-sm font-medium">
-                                <i class="fas fa-users-class mr-3 text-base"></i> Katta guruh tafsilotlarini ko‘rish
+                            <Link v-if="student.groups && student.groups.length > 0" 
+                                  v-for="group in student.groups" 
+                                  :key="group.id"
+                                  :href="route('groups.show', group.id)" 
+                                  class="flex items-center w-full text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-700 dark:text-gray-300 text-sm font-medium">
+                                <i class="fas fa-users-class mr-3 text-base"></i> {{ group.name }} guruhni ko'rish
                             </Link>
                         </div>
                     </div>
@@ -121,6 +135,11 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
+interface Group {
+    id: number;
+    name: string;
+}
+
 interface Student {
     id: number;
     full_name: string;
@@ -129,6 +148,7 @@ interface Student {
     balance: number;
     created_at: string;
     updated_at: string;
+    groups?: Group[];
 }
 
 const props = defineProps<{

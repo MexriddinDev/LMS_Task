@@ -1,5 +1,5 @@
 <template>
-    <Head title="Guruhni tahrirlash" />
+    <Head title="Guruh tahrirlash" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-4 space-y-4 text-gray-800 dark:text-gray-200 max-w-4xl mx-auto">
@@ -7,10 +7,10 @@
                 <Link :href="route('groups.index')" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-400">
                     <i class="fas fa-arrow-left text-xl"></i>
                 </Link>
-                <h1 class="text-2xl font-bold">Guruhni Tahrirlash</h1>
+                <h1 class="text-2xl font-bold">Guruh tahrirlash</h1>
             </div>
 
-            <p class="text-gray-600 dark:text-gray-400">Guruh ma'lumotlarini tahrirlang va unga o'qituvchi biriktiring.</p>
+            <p class="text-gray-600 dark:text-gray-400">O'quv guruhining ma'lumotlarini yangilang.</p>
 
             <form @submit.prevent="onSubmit" class="space-y-6">
                 <div class="p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
@@ -45,9 +45,8 @@
                                         v-model="field.value"
                                         @change="field.handleChange"
                                         @blur="field.handleBlur"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600
-           rounded-lg bg-white text-black dark:bg-black dark:text-white
-           placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none"                                        required
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white text-black dark:bg-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none"
+                                        required
                                     >
                                         <option value="" disabled class="text-gray-500 dark:text-gray-400">O'qituvchi tanlang</option>
                                         <option
@@ -91,7 +90,6 @@
                                         <FormControl>
                                             <Button
                                                 variant="outline"
-                                                type="button"
                                                 :class="cn(
                                                     'w-full ps-3 text-start font-normal',
                                                     'border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500',
@@ -113,9 +111,9 @@
                                             :max-value="today(getLocalTimeZone())"
                                             @update:model-value="(v) => {
                                                 if (v) {
-                                                    setFieldValue('start_date', v.toString());
+                                                    setFieldValue('start_date', v.toString())
                                                 } else {
-                                                    setFieldValue('start_date', undefined);
+                                                    setFieldValue('start_date', undefined)
                                                 }
                                             }"
                                         />
@@ -136,7 +134,6 @@
                                         <FormControl>
                                             <Button
                                                 variant="outline"
-                                                type="button"
                                                 :class="cn(
                                                     'w-full ps-3 text-start font-normal',
                                                     'border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500',
@@ -158,9 +155,9 @@
                                             :max-value="today(getLocalTimeZone())"
                                             @update:model-value="(v) => {
                                                 if (v) {
-                                                    setFieldValue('date', v.toString());
+                                                    setFieldValue('date', v.toString())
                                                 } else {
-                                                    setFieldValue('date', undefined);
+                                                    setFieldValue('date', undefined)
                                                 }
                                             }"
                                         />
@@ -180,8 +177,8 @@
                         Bekor qilish
                     </Link>
                     <Button type="submit" :disabled="isSubmitting" class="bg-white text-black px-5 py-2 rounded-lg hover:bg-gray-100 dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-colors duration-200">
-                        <span v-if="isSubmitting">Saqlanmoqda...</span>
-                        <span v-else>Guruhni saqlash</span>
+                        <span v-if="isSubmitting">Yangilanmoqda...</span>
+                        <span v-else>Guruh yangilash</span>
                     </Button>
                 </div>
             </form>
@@ -192,7 +189,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue'
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ref, computed, defineComponent, h, onMounted } from 'vue';
+import { ref, computed, defineComponent, h } from 'vue';
 import { CalendarDate, DateFormatter, getLocalTimeZone, parseDate, today } from '@internationalized/date'
 import { toTypedSchema } from '@vee-validate/zod'
 import { CalendarIcon } from 'lucide-vue-next'
@@ -207,7 +204,17 @@ function toDate(date: CalendarDate): Date {
     return new Date(date.year, date.month - 1, date.day);
 }
 
-// Basic cn utility function
+// Utility to validate ISO 8601 date string
+function isValidISODate(dateString: string): boolean {
+    try {
+        parseDate(dateString);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+// Basic `cn` utility function
 type ClassValue = string | boolean | null | undefined | { [key: string]: ClassValue } | ClassValue[];
 function cn(...inputs: ClassValue[]): string {
     const classes: string[] = [];
@@ -273,13 +280,8 @@ const FormField = defineComponent({
     setup(props, { slots }) {
         const { value, handleChange, handleBlur, errorMessage, meta } = useField(() => props.name as string);
         return () => slots.default?.({
-            field: {
-                name: props.name,
-                value: value.value,
-                handleChange: handleChange,
-                handleBlur: handleBlur,
-            },
-            meta: meta,
+            field: { name: props.name, value: value.value, handleChange, handleBlur },
+            meta,
             errorMessage: errorMessage.value,
         });
     },
@@ -288,37 +290,51 @@ const FormField = defineComponent({
 // Date formatter
 const df = new DateFormatter('en-US', { dateStyle: 'long' });
 
-// Props
+// Define props with validation
 const props = defineProps<{
-    group: { id: number; name: string; teacher_id: number; monthly_fee: number; start_date: string; date: string } | null;
-    teachers: { id: number; name: string }[];
+    group: {
+        id: number;
+        name: string;
+        teacher_id: number;
+        monthly_fee: number;
+        start_date: string;
+        date: string;
+    };
+    teachers: {
+        id: number;
+        name: string;
+    }[];
 }>();
 
-// Form validation schema
+// Sanitize date props
+const sanitizedStartDate = computed(() => isValidISODate(props.group.start_date) ? props.group.start_date : '');
+const sanitizedDate = computed(() => isValidISODate(props.group.date) ? props.group.date : '');
+
+// Zod schema for form validation
 const formSchema = toTypedSchema(z.object({
     name: z.string().min(1, "Guruh nomi kiritilishi shart."),
     teacher_id: z.coerce.number().min(1, "O'qituvchi tanlanishi shart."),
     monthly_fee: z.coerce.number().min(0, "Oylik to'lov manfiy bo'lishi mumkin emas.").refine(val => val !== null && val !== undefined, "Oylik to'lov kiritilishi shart."),
-    start_date: z.string().refine(v => v, { message: "Boshlanish sanasi kiritilishi shart." }),
-    date: z.string().refine(v => v, { message: "Hozirgi sana kiritilishi shart." }),
+    start_date: z.string().refine(v => v && isValidISODate(v), { message: "Boshlanish sanasi to'g'ri formatda bo'lishi shart (YYYY-MM-DD)." }),
+    date: z.string().refine(v => v && isValidISODate(v), { message: "Hozirgi sana to'g'ri formatda bo'lishi shart (YYYY-MM-DD)." }),
 }));
 
-// Form setup
-const { handleSubmit, setFieldValue, values, errors, isSubmitting } = useForm({
+// VeeValidate form setup with sanitized initial values
+const { handleSubmit, setFieldValue, values, errors, isSubmitting, resetForm } = useForm({
     validationSchema: formSchema,
     initialValues: {
-        name: props.group?.name || '',
-        teacher_id: props.group?.teacher_id || '',
-        monthly_fee: props.group?.monthly_fee || 0,
-        start_date: props.group?.start_date || undefined,
-        date: props.group?.date || undefined,
+        name: props.group.name,
+        teacher_id: props.group.teacher_id.toString(),
+        monthly_fee: props.group.monthly_fee,
+        start_date: sanitizedStartDate.value,
+        date: sanitizedDate.value,
     }
 });
 
-// Calendar refs and computed properties for start_date
+// Calendar related refs and computed properties for start_date
 const startDatePlaceholder = ref();
 const startDateValue = computed({
-    get: () => values.start_date ? parseDate(values.start_date) : undefined,
+    get: () => values.start_date && isValidISODate(values.start_date) ? parseDate(values.start_date) : undefined,
     set: val => {
         if (val) {
             setFieldValue('start_date', val.toString());
@@ -328,10 +344,10 @@ const startDateValue = computed({
     }
 });
 
-// Calendar refs and computed properties for date
+// Calendar related refs and computed properties for date
 const currentDatePlaceholder = ref();
 const currentDateValue = computed({
-    get: () => values.date ? parseDate(values.date) : undefined,
+    get: () => values.date && isValidISODate(values.date) ? parseDate(values.date) : undefined,
     set: val => {
         if (val) {
             setFieldValue('date', val.toString());
@@ -343,12 +359,6 @@ const currentDateValue = computed({
 
 // Form submission handler
 const onSubmit = handleSubmit(async (formValues) => {
-    if (!props.group || !props.group.id) {
-        console.error("Guruh ID'si topilmadi. Yangilash mumkin emas.");
-        alert("Guruh ma'lumotlari topilmadi. Iltimos, sahifani qayta yuklang.");
-        return;
-    }
-
     const payload = {
         ...formValues,
         teacher_id: Number(formValues.teacher_id),
@@ -358,11 +368,10 @@ const onSubmit = handleSubmit(async (formValues) => {
     router.put(route('groups.update', props.group.id), payload, {
         onSuccess: () => {
             console.log('Guruh muvaffaqiyatli yangilandi!');
-            router.visit(route('groups.index'));
+            resetForm({ values: formValues });
         },
         onError: (inertiaErrors) => {
-            console.error('Guruhni yangilashda xatolik yuz berdi:', inertiaErrors);
-            alert('Guruhni yangilashda xato yuz berdi: ' + JSON.stringify(inertiaErrors));
+            console.error('Guruh yangilashda xatolik yuz berdi:', inertiaErrors);
         },
     });
 });
@@ -371,14 +380,8 @@ const onSubmit = handleSubmit(async (formValues) => {
 const breadcrumbs = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Guruhlar', href: '/groups' },
-    { title: 'Guruhni tahrirlash', href: props.group ? route('groups.edit', props.group.id) : '/groups/edit' }
+    { title: 'Guruh tahrirlash', href: `/groups/${props.group.id}/edit` }
 ];
-
-// Debug props
-onMounted(() => {
-    console.log('Teachers:', props.teachers);
-    console.log('Group:', props.group);
-});
 </script>
 
 <style scoped>

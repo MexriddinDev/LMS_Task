@@ -1,5 +1,5 @@
 <template>
-    <Head :title="`Tarbiyalanuvchi ${form.full_name ? form.full_name : ''}ni tahrirlash`" />
+    <Head title="Tarbiyalanuvchi tahrirlash" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-4 space-y-4 text-gray-800 dark:text-gray-200 max-w-4xl mx-auto">
@@ -7,10 +7,10 @@
                 <Link :href="route('students.index')" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-400">
                     <i class="fas fa-arrow-left text-xl"></i>
                 </Link>
-                <h1 class="text-2xl font-bold">O'quvchini tahrirlash</h1>
+                <h1 class="text-2xl font-bold">O'quvchi tahrirlash</h1>
             </div>
 
-            <p class="text-gray-900 dark:text-gray-400">Mavjud o'quvchi hisobini tahrirlang</p>
+            <p class="text-gray-600 dark:text-gray-400">O'quvchi ma'lumotlarini yangilang</p>
 
             <form @submit.prevent="submitForm" class="space-y-6">
                 <div class="p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
@@ -55,7 +55,7 @@
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
                                 placeholder="XX XXX XX XX"
                                 required
-                                maxlength="9"
+                                maxlength="15"
                                 @input="validatePhoneInput"
                             >
                             <p v-if="form.errors.phone" class="text-red-500 text-sm mt-1">{{ form.errors.phone }}</p>
@@ -87,6 +87,25 @@
                             >
                             <p v-if="form.errors.balance" class="text-red-500 text-sm mt-1">{{ form.errors.balance }}</p>
                         </div>
+
+                        <div>
+                            <label for="group" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Guruhni tanlang</label>
+                            <select
+                                id="group"
+                                v-model="form.group_id"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:text-gray-200 bg-white dark:bg-gray-950"
+                            >
+                                <option value="">--- Guruhni tanlang ---</option>
+                                <option v-for="group in groups" :key="group.id" :value="group.id">
+                                    {{ group.name }}
+                                </option>
+                            </select>
+                            <p v-if="form.errors.group_id" class="text-red-500 text-sm mt-1">{{ form.errors.group_id }}</p>
+                            <p v-if="groups.length === 0" class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                                Guruhlar mavjud emas. Avval guruh yaratishingiz kerak.
+                                <Link :href="route('groups.create')" class="text-blue-500 hover:underline">Guruh yaratish</Link>
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -94,10 +113,10 @@
                     <Link :href="route('students.index')" class="text-gray-700 px-5 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600 transition-colors duration-200">
                         Bekor qilish
                     </Link>
-                    <Button type="submit" :disabled="form.processing" class="bg-white text-black px-5 py-2 rounded-lg hover:bg-gray-100 dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-colors duration-200">
+                    <button type="submit" :disabled="form.processing" class="bg-white text-black px-5 py-2 rounded-lg hover:bg-gray-100 dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-colors duration-200">
                         <span v-if="form.processing">Yangilanmoqda...</span>
-                        <span v-else>O'quvchini yangilash</span>
-                    </Button>
+                        <span v-else>O'quvchi yangilash</span>
+                    </button>
                 </div>
             </form>
         </div>
@@ -105,33 +124,36 @@
 </template>
 
 <script setup lang="ts">
-import AppLayout from '@/layouts/AppLayout.vue';
+import AppLayout from '@/layouts/AppLayout.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 
-// Define the shape of a Student object for better type safety
-interface Student {
-    id: number;
-    full_name: string;
-    phone: string;
-    birth_date: string;
-    balance: number;
-    profile_picture_url?: string; // Optional, as it might not always be present
-}
-
-// Define props to receive the student data
+// Define props to receive the student and groups data
 const props = defineProps<{
-    student: Student;
+    student: {
+        id: number;
+        full_name: string;
+        phone: string;
+        birth_date: string;
+        balance: number;
+        profile_picture?: string | null;
+        groups?: { id: number; name: string }[];
+    };
+    groups: {
+        id: number;
+        name: string;
+    }[];
 }>();
 
+// Initialize form with student data
 const form = useForm({
     full_name: props.student.full_name,
     phone: props.student.phone,
     birth_date: props.student.birth_date,
     balance: props.student.balance,
     profile_picture: null as File | null,
-    profile_picture_preview: props.student.profile_picture_url || null, // Initialize with existing picture
-    _method: 'put', // Important for Inertia.js PUT/PATCH requests
+    profile_picture_preview: props.student.profile_picture || null,
+    group_id: props.student.groups && props.student.groups.length > 0 ? props.student.groups[0].id : null,
 });
 
 const clientPhoneError = ref<string | null>(null);
@@ -153,56 +175,56 @@ const handleProfilePictureUpload = (event: Event) => {
         reader.readAsDataURL(file);
     } else {
         form.profile_picture = null;
-        // If no new file is selected, retain the old preview if it exists
-        form.profile_picture_preview = props.student.profile_picture_url || null;
+        form.profile_picture_preview = props.student.profile_picture || null;
     }
 };
 
 const validatePhoneInput = () => {
     let value = form.phone ? String(form.phone) : '';
     value = value.replace(/\D/g, '');
-    value = value.slice(0, 9);
+    value = value.slice(0, 15); // Match controller's max length
     form.phone = value;
 
     clientPhoneError.value = null;
 
     if (value.length === 0) {
         clientPhoneError.value = "Telefon raqami kiritilishi shart.";
-    } else if (value.length !== 9) {
-        clientPhoneError.value = "Telefon raqami 9 ta raqamdan iborat bo'lishi shart.";
     }
 };
 
 const submitForm = () => {
     validatePhoneInput();
 
+    // Check for client-side phone error before submission
     if (clientPhoneError.value) {
         return;
     }
 
+    // Explicitly set group_id to null if the "--- Guruhni tanlang ---" option is selected
+    if (form.group_id === '') {
+        form.group_id = null;
+    }
+
+    // Clear Inertia's phone error if client-side validation passes
     if (form.errors.phone) {
         form.errors.phone = undefined;
     }
 
-    // Use form.post for _method: 'put' or form.put if your backend directly supports it
-    // Inertia.js recommends using form.post with the _method field for PUT/PATCH.
-    form.post(route('students.update', props.student.id), {
+    form.put(route('students.update', props.student.id), {
         onSuccess: () => {
-            // No need to reset the form on success for an update,
-            // as the current data should remain
-            // You might want to show a success message or redirect
-            console.log('Oquvchi muvaffaqiyatli yangilandi!');
+            form.reset('profile_picture', 'profile_picture_preview'); // Only reset profile picture fields
+            clientPhoneError.value = null;
         },
         onError: (errors) => {
-            console.error('Oquvchini yangilashda xato:', errors);
+            console.error('Oquvchi yangilashda xato:', errors);
         },
     });
 };
 
 const breadcrumbs = [
     { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Tarbiyalanuvchilar', href: '/students' },
-    { title: 'Tahrirlash', href: `/students/${props.student.id}/edit` }
+    { title: 'Oquvchi', href: '/students' },
+    { title: 'Oquvchi tahrirlash', href: `/students/${props.student.id}/edit` },
 ];
 </script>
 

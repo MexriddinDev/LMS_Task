@@ -45,10 +45,11 @@
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="text-gray-600 dark:text-gray-300">
                     <tr>
-                        <th class="p-3 text-left text-sm font-semibold">Ma’lumotnoma</th>
+                        <th class="p-3 text-left text-sm font-semibold">To'lov nomi</th>
+                        <th class="p-3 text-left text-sm font-semibold">Turi</th>
                         <th class="p-3 text-left text-sm font-semibold">Tarbiyalanuvchi</th>
                         <th class="p-3 text-left text-sm font-semibold">Miqdor</th>
-                        <th class="p-3 text-left text-sm font-semibold">Usuli</th>
+                        <th class="p-3 text-left text-sm font-semibold">To'lov usuli</th>
                         <th class="p-3 text-left text-sm font-semibold">Holati</th>
                         <th class="p-3 text-left text-sm font-semibold">Sana</th>
                         <th class="p-3 text-left text-sm font-semibold">Harakatlar</th>
@@ -60,35 +61,31 @@
                         :key="payment.id"
                         class="hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150"
                     >
-                        <td class="p-3 text-sm">{{ payment.student?.name || 'Noma’lum' }}</td>
+                        <td class="p-3 text-sm font-medium">{{ generatePaymentCode(payment.id) }}</td>
                         <td class="p-3 text-sm">
-                            {{ payment.student?.name || 'Noma’lum' }}
+                            <span :class="{
+                                'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium': true,
+                                'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300': payment.type === 'debt',
+                                'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300': payment.type === 'balance'
+                            }">
+                                <i :class="{
+                                    'fas fa-money-bill-wave': payment.type === 'debt',
+                                    'fas fa-wallet': payment.type === 'balance'
+                                }"></i>
+                                {{ payment.type === 'debt' ? 'Qarz to\'lovi' : 'Balansga' }}
+                            </span>
+                        </td>
+                        <td class="p-3 text-sm">
+                            {{ payment.student?.full_name || 'Noma\'lum' }}
                             <span v-if="payment.student_id" class="text-xs text-gray-400 dark:text-gray-500"> (ID: {{ payment.student_id }})</span>
                         </td>
-                        <td class="p-3 text-sm">{{ formatCurrency(payment.amount) }}</td>
-                        <td class="p-3 text-sm text-gray-600 dark:text-gray-300">Card</td>
+                        <td class="p-3 text-sm font-medium">{{ formatCurrency(payment.amount) }}</td>
+                        <td class="p-3 text-sm text-gray-600 dark:text-gray-300">{{ payment.payment_method || 'Naqd' }}</td>
                         <td class="p-3 text-sm">
-                            <div
-                                :class="{
-                                    'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium': true,
-                                    'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300': payment.status === 'completed',
-                                    'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300': payment.status === 'returned',
-                                    'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300': payment.status === 'pending',
-                                    'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300': payment.status === 'failed'
-                                }"
-                            >
-                                <i class="fas fa-check-circle"
-                                   :class="{
-                                       'text-green-400': payment.status === 'completed',
-                                       'text-red-400': payment.status === 'returned',
-                                       'text-yellow-400': payment.status === 'pending',
-                                       'text-gray-400': payment.status === 'failed'
-                                   }"
-                                ></i>
-                                {{ payment.status === 'completed' ? 'Yakunlangan' :
-                                payment.status === 'returned' ? 'Qaytarilgan' :
-                                    payment.status === 'pending' ? 'Kutilmoqda' : 'Muvaffaqiyatsiz' }}
-                            </div>
+                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                                Yakunlangan
+                            </span>
                         </td>
                         <td class="p-3 text-sm text-gray-600 dark:text-gray-300">{{ formatDate(payment.date) }}</td>
                         <td class="p-3 text-sm">
@@ -116,8 +113,8 @@
                         </td>
                     </tr>
                     <tr v-if="payments.length === 0">
-                        <td colspan="7" class="p-4 text-center text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-900">
-                            Hozircha hech qanday to‘lov yo‘q.
+                        <td colspan="8" class="p-4 text-center text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-900">
+                            Hozircha hech qanday to'lov yo'q.
                         </td>
                     </tr>
                     </tbody>
@@ -135,20 +132,19 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 interface Student {
     id: number;
-    name: string;
+    full_name: string;
 }
 
 interface Payment {
     id: number;
-    reference?: string;
     student_id: number;
     student: Student;
     amount: number;
-    type: string;
-    status: 'completed' | 'returned' | 'pending' | 'failed';
+    type: 'debt' | 'balance';
     date: string;
     note?: string;
     debt_id?: number;
+    payment_method?: string;
 }
 
 const props = defineProps<{
