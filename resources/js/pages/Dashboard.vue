@@ -55,12 +55,10 @@ const breadcrumbs: BreadcrumbItem[] = [
             </div>
 
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <!-- Tarbiyalanuvchilar kartochkasi -->
-                <Card class=" border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-center shadow-md">
+                <Card class="border-b border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center text-center shadow-md shadow-gray-200 dark:shadow-gray-800">
                     <CardHeader class="pb-2 flex flex-col items-center">
-                        <div class="rounded-lg bg-primary/10 p-1 sm:p-2 mb-2">
-                            <!-- Ikonka: qorong'u rejimda oq rangda bo'lishi uchun dark:text-white qo'shildi -->
-                            <svg class="lucide lucide-users-icon h-3 w-3 sm:h-5 sm:w-5 text-primary dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        <div class="rounded-lg bg-blue-100 dark:bg-blue-900/40 p-1 sm:p-2 mb-2">
+                            <svg class="lucide lucide-users-icon h-3 w-3 sm:h-5 sm:w-5 text-blue-600 dark:text-blue-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         </div>
                         <CardDescription class="text-gray-500 dark:text-gray-400 text-sm">
                             Tarbiyalanuvchilar
@@ -73,12 +71,10 @@ const breadcrumbs: BreadcrumbItem[] = [
                     </CardContent>
                 </Card>
 
-                <!-- Guruhlar kartochkasi -->
-                <Card class=" border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-center shadow-md">
+                <Card class="border-b border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center text-center shadow-md shadow-gray-200 dark:shadow-gray-800">
                     <CardHeader class="pb-2 flex flex-col items-center">
-                        <div class="rounded-lg bg-primary/10 p-1 sm:p-2 mb-2">
-                            <!-- Ikonka: qorong'u rejimda oq rangda bo'lishi uchun dark:text-white qo'shildi -->
-                            <svg class="lucide lucide-building2-icon h-3 w-3 sm:h-5 sm:w-5 text-primary dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path><path d="M10 6h4"></path><path d="M10 10h4"></path><path d="M10 14h4"></path><path d="M10 18h4"></path></svg>
+                        <div class="rounded-lg bg-green-100 dark:bg-green-900/40 p-1 sm:p-2 mb-2">
+                            <svg class="lucide lucide-building2-icon h-3 w-3 sm:h-5 sm:w-5 text-green-600 dark:text-green-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path><path d="M10 6h4"></path><path d="M10 10h4"></path><path d="M10 14h4"></path><path d="M10 18h4"></path></svg>
                         </div>
                         <CardDescription class="text-gray-500 dark:text-gray-400 text-sm">
                             Guruhlar
@@ -91,12 +87,10 @@ const breadcrumbs: BreadcrumbItem[] = [
                     </CardContent>
                 </Card>
 
-                <!-- Xodimlar kartochkasi -->
-                <Card class="border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-center shadow-md">
+                <Card class="border-b border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center text-center shadow-md shadow-gray-200 dark:shadow-gray-800">
                     <CardHeader class="pb-2 flex flex-col items-center">
-                        <div class="rounded-lg bg-primary/10 p-1 sm:p-2 mb-2">
-                            <!-- Ikonka: qorong'u rejimda oq rangda bo'lishi uchun dark:text-white qo'shildi -->
-                            <svg class="lucide lucide-user-check h-3 w-3 sm:h-5 sm:w-5 text-primary dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
+                        <div class="rounded-lg bg-yellow-100 dark:bg-yellow-900/40 p-1 sm:p-2 mb-2">
+                            <svg class="lucide lucide-user-check h-3 w-3 sm:h-5 sm:w-5 text-yellow-600 dark:text-yellow-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
                         </div>
                         <CardDescription class="text-gray-500 dark:text-gray-400 text-sm">
                             Xodimlar
@@ -109,12 +103,10 @@ const breadcrumbs: BreadcrumbItem[] = [
                     </CardContent>
                 </Card>
 
-                <!-- Pul miqdori kartochkasi -->
-                <Card class="border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-center shadow-md">
+                <Card class="border-b border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center text-center shadow-md shadow-gray-200 dark:shadow-gray-800">
                     <CardHeader class="pb-2 flex flex-col items-center">
-                        <div class="rounded-lg bg-primary/10 p-1 sm:p-2 mb-2">
-                            <!-- Ikonka: qorong'u rejimda oq rangda bo'lishi uchun dark:text-white qo'shildi -->
-                            <svg class="lucide lucide-dollar-sign h-3 w-3 sm:h-5 sm:w-5 text-primary dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        <div class="rounded-lg bg-purple-100 dark:bg-purple-900/40 p-1 sm:p-2 mb-2">
+                            <svg class="lucide lucide-dollar-sign h-3 w-3 sm:h-5 sm:w-5 text-purple-600 dark:text-purple-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                         </div>
                         <CardDescription class="text-gray-500 dark:text-gray-400 text-sm">
                             Pul miqdori
@@ -128,12 +120,11 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </Card>
             </div>
 
-            <!-- Oxirgi faoliyat kartochkasi (endi Shadcn Card) -->
-            <!-- Gradient klasslari olib tashlandi, endi u standart Shadcn Card fonini ishlatadi -->
-            <Card class="flex-1 border border-gray-200 dark:border-gray-700 shadow-md flex items-center justify-center min-h-[200px] transition-all duration-300 hover:shadow-lg">
+            ---
+
+            <Card class="flex-1 border-b border-gray-300 dark:border-gray-700 shadow-md shadow-gray-200 dark:shadow-gray-800 flex items-center justify-center min-h-[200px] transition-all duration-300 hover:shadow-lg">
                 <CardContent class="text-center flex flex-col items-center">
-                    <!-- Ikonka: qorong'u rejimda oq rangda bo'lishi uchun dark:text-white qo'shildi -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-icon h-12 w-12 sm:h-16 sm:w-16 text-primary mb-4 dark:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-icon h-12 w-12 sm:h-16 sm:w-16 text-rose-600 dark:text-rose-300 mb-4">
                         <path d="M12 7v14"></path>
                         <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path>
                     </svg>

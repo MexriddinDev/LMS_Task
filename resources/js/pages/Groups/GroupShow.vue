@@ -124,27 +124,22 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Ism Familya</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Telefon</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Harakatlar</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Harakatlar</th>
                             </tr>
                             </thead>
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             <tr v-for="student in group.students" :key="student.id">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ student.name }}</div>
-                                </td>
+                                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ student.full_name }}</div> </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-500 dark:text-gray-400">{{ student.phone }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                        <span :class="{
-                                            'px-2 inline-flex text-xs leading-5 font-semibold rounded-full': true,
-                                            'bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100': student.is_active,
-                                            'bg-red-100 text-red-800 dark:bg-red-700 dark:text-red-100': !student.is_active
-                                        }">
-                                            {{ student.is_active ? 'Faol' : 'Nofaol' }}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100">
+                                            Faol
                                         </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                     <Link :href="route('students.show', student.id)" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-600">
                                         <Button variant="ghost" size="icon" title="Ko'rish">
                                             <i class="fas fa-eye text-gray-600 text-sm dark:text-gray-400"></i>
@@ -178,7 +173,7 @@ const props = defineProps<{
         monthly_fee: number;
         start_date: string;
         capacity?: number;
-        is_active?: boolean; // Keep optional, but we're hardcoding 'Faol'
+        is_active?: boolean;
         created_at: string;
         updated_at: string;
         teacher: {
@@ -187,9 +182,9 @@ const props = defineProps<{
         } | null;
         students: { // Added students array for related students
             id: number;
-            name: string;
+            full_name: string; // Changed from 'name' to 'full_name'
             phone: string;
-            is_active: boolean; // Assuming students also have an active status
+            is_active: boolean;
         }[];
     };
 }>();
@@ -197,7 +192,11 @@ const props = defineProps<{
 const formatDate = (dateString: string) => {
     if (!dateString) return 'Noma\'lum sana';
     try {
-        return new Date(dateString).toLocaleDateString('uz-UZ', {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            return 'Xato sana';
+        }
+        return date.toLocaleDateString('uz-UZ', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
@@ -219,7 +218,7 @@ const deleteGroupConfirmation = (id: number, name: string) => {
         router.delete(route('groups.destroy', id), {
             onSuccess: () => {
                 alert('Guruh muvaffaqiyatli o‘chirildi!');
-                router.visit(route('groups.index')); // Redirect to group list after deletion
+                router.visit(route('groups.index'));
             },
             onError: (errors) => {
                 console.error('Guruhni o‘chirishda xatolik yuz berdi:', errors);

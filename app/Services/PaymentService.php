@@ -18,7 +18,6 @@ class PaymentService
     public function processPayment(array $paymentData): Payment
     {
         return DB::transaction(function () use ($paymentData) {
-            // Create the payment record
             $payment = Payment::create($paymentData);
 
             if ($payment->type === 'debt') {
@@ -66,11 +65,15 @@ class PaymentService
             }
         }
 
-        // If there's still remaining amount, add it to student's balance
+
         if ($remainingAmount > 0) {
             $student->balance += $remainingAmount;
-            $student->save();
         }
+
+
+        $student->balance -= $payment->amount;
+
+        $student->save();
     }
 
     /**

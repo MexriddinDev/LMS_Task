@@ -7,9 +7,19 @@ use Illuminate\Http\Request;
 
 class DebtController extends Controller
 {
-    public function index(){
-
+    public function index()
+    {
+        // Eager load the 'student' and 'group' relationships directly on the Debt model
         $debts = Debt::with(['student', 'group'])->get();
-        return inertia('Debts/Debts', ['debts' => $debts]);
+
+        // Calculate paid and unpaid debts
+        $paidDebtsCount = $debts->where('is_paid', true)->count();
+        $unpaidDebtsCount = $debts->where('is_paid', false)->count();
+
+        return inertia('Debts/Debts', [
+            'debts' => $debts,
+            'paidDebtsCount' => $paidDebtsCount,
+            'unpaidDebtsCount' => $unpaidDebtsCount,
+        ]);
     }
 }

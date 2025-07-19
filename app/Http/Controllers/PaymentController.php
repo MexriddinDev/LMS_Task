@@ -10,10 +10,8 @@ use Inertia\Inertia;
 class PaymentController extends Controller
 {
     public function index(){
-        // Eager load the 'student' relationship to get student details with each payment
         $payments = Payment::with('student')->get();
 
-        // Calculate counts for completed and returned payments
         $completedPaymentsCount = $payments->where('status', 'completed')->count();
         $returnedPaymentsCount = $payments->where('status', 'returned')->count();
 
@@ -33,7 +31,6 @@ class PaymentController extends Controller
     }
 
     public function create(){
-        // Get all students with their groups and debts
         $students = \App\Models\Student::with(['groups', 'debts' => function($query) {
             $query->where('is_paid', false)
                   ->orderBy('created_at', 'asc');

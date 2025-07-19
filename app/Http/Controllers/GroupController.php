@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
-use App\Models\Student;
-use App\Models\Teacher;
+use App\Models\Student; // Make sure Student is imported if not already
+use App\Models\Teacher; // Make sure Teacher is imported if not already
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,7 +13,7 @@ class GroupController extends Controller
     public function index()
     {
         $teachers = Teacher::all();
-        $groups = Group::with('teacher')->get(); // <-- teacher bilan birga yuklaymiz
+        $groups = Group::with('teacher')->get();
 
         return Inertia::render('Groups/Groups', [
             'groups' => $groups,
@@ -24,7 +24,8 @@ class GroupController extends Controller
 
     public function show($id)
     {
-        $group = Group::with('students')->findOrFail($id);
+        // Eager load both 'students' and 'teacher' relationships
+        $group = Group::with(['students', 'teacher'])->findOrFail($id);
         return Inertia::render('Groups/GroupShow', [
             'group' => $group
         ]);

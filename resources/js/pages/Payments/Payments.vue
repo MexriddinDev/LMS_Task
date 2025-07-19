@@ -12,11 +12,10 @@
                 </Link>
             </div>
 
-            <!-- Statistika -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <Card class="border-gray-200 shadow-sm dark:border-gray-700">
                     <CardHeader>
-                        <CardTitle class="text-gray-500 text-base dark:text-gray-400">Jami o'quvchilar</CardTitle>
+                        <CardTitle class="text-gray-500 text-base dark:text-gray-400">Jami to'lovlar</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <h2 class="text-2xl font-semibold text-black dark:text-white">{{ payments.length }}</h2>
@@ -24,23 +23,22 @@
                 </Card>
                 <Card class="border-green-200 shadow-sm dark:border-green-700">
                     <CardHeader>
-                        <CardTitle class="text-gray-500 text-base dark:text-gray-400">Faol o'quvchilar</CardTitle>
+                        <CardTitle class="text-gray-500 text-base dark:text-gray-400">Balansga o'tkazilgan</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <h2 class="text-2xl font-semibold text-green-600 dark:text-green-400">{{ returnedPaymentsCount }}</h2>
+                        <h2 class="text-2xl font-semibold text-green-600 dark:text-green-400">{{ balancePaymentsComputed }}</h2>
                     </CardContent>
                 </Card>
                 <Card class="border-red-200 shadow-sm dark:border-red-700">
                     <CardHeader>
-                        <CardTitle class="text-gray-500 text-base dark:text-gray-400">Nofaol o'quvchilar</CardTitle>
+                        <CardTitle class="text-gray-500 text-base dark:text-gray-400">Qarzdan yopilgan</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <h2 class="text-2xl font-semibold text-red-600 dark:text-red-400">{{ completedPaymentsCount }}</h2>
+                        <h2 class="text-2xl font-semibold text-red-600 dark:text-red-400">{{ debtPaymentsComputed }}</h2>
                     </CardContent>
                 </Card>
             </div>
 
-            <!-- Jadval -->
             <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-sm dark:border-gray-700">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="text-gray-600 dark:text-gray-300">
@@ -48,11 +46,9 @@
                         <th class="p-3 text-left text-sm font-semibold">To'lov nomi</th>
                         <th class="p-3 text-left text-sm font-semibold">Turi</th>
                         <th class="p-3 text-left text-sm font-semibold">Tarbiyalanuvchi</th>
-                        <th class="p-3 text-left text-sm font-semibold">Miqdor</th>
-                        <th class="p-3 text-left text-sm font-semibold">To'lov usuli</th>
-                        <th class="p-3 text-left text-sm font-semibold">Holati</th>
+                        <th class="px-8 py-3 text-right text-sm font-semibold">Miqdor</th> <th class="px-8 py-3 text-left text-sm font-semibold">To'lov usuli</th> <th class="p-3 text-center text-sm font-semibold">Holati</th>
                         <th class="p-3 text-left text-sm font-semibold">Sana</th>
-                        <th class="p-3 text-left text-sm font-semibold">Harakatlar</th>
+                        <th class="p-3 text-center text-sm font-semibold">Harakatlar</th>
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -61,8 +57,8 @@
                         :key="payment.id"
                         class="hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150"
                     >
-                        <td class="p-3 text-sm font-medium">{{ generatePaymentCode(payment.id) }}</td>
-                        <td class="p-3 text-sm">
+                        <td class="p-3 text-sm font-medium text-left">{{ generatePaymentCode(payment.id) }}</td>
+                        <td class="p-3 text-sm text-left">
                             <span :class="{
                                 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium': true,
                                 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300': payment.type === 'debt',
@@ -75,21 +71,18 @@
                                 {{ payment.type === 'debt' ? 'Qarz to\'lovi' : 'Balansga' }}
                             </span>
                         </td>
-                        <td class="p-3 text-sm">
+                        <td class="p-3 text-sm text-left">
                             {{ payment.student?.full_name || 'Noma\'lum' }}
-                            <span v-if="payment.student_id" class="text-xs text-gray-400 dark:text-gray-500"> (ID: {{ payment.student_id }})</span>
                         </td>
-                        <td class="p-3 text-sm font-medium">{{ formatCurrency(payment.amount) }}</td>
-                        <td class="p-3 text-sm text-gray-600 dark:text-gray-300">{{ payment.payment_method || 'Naqd' }}</td>
-                        <td class="p-3 text-sm">
+                        <td class="px-8 py-3 text-sm font-medium text-right">{{ formatCurrency(payment.amount) }}</td> <td class="px-8 py-3 text-sm text-gray-600 dark:text-gray-300 text-left">{{ payment.payment_method || 'Naqd' }}</td> <td class="p-3 text-sm text-center">
                             <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
                                 <i class="fas fa-check-circle text-green-400"></i>
                                 Yakunlangan
                             </span>
-                        </td>
-                        <td class="p-3 text-sm text-gray-600 dark:text-gray-300">{{ formatDate(payment.date) }}</td>
-                        <td class="p-3 text-sm">
-                            <div class="flex items-center gap-2">
+                    </td>
+                        <td class="p-3 text-sm text-gray-600 dark:text-gray-300 text-left">{{ formatDate(payment.date) }}</td>
+                        <td class="p-3 text-sm text-center">
+                            <div class="flex items-center justify-center gap-2">
                                 <Link :href="route('payments.show', payment.id)" title="Ko‘rish">
                                     <Button variant="outline" size="icon" class="border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                                         <i class="fas fa-eye text-gray-600 dark:text-gray-300 text-sm"></i>
@@ -100,15 +93,6 @@
                                         <i class="fas fa-pen text-gray-600 dark:text-gray-300 text-sm"></i>
                                     </Button>
                                 </Link>
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    title="O‘chirish"
-                                    class="border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
-                                    @click="confirmDelete(payment.id)"
-                                >
-                                    <i class="fas fa-trash text-red-600 dark:text-red-400 text-sm"></i>
-                                </Button>
                             </div>
                         </td>
                     </tr>
@@ -129,6 +113,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { computed } from 'vue';
 
 interface Student {
     id: number;
@@ -149,14 +134,24 @@ interface Payment {
 
 const props = defineProps<{
     payments: Payment[];
-    completedPaymentsCount: number;
-    returnedPaymentsCount: number;
 }>();
+
+const balancePaymentsComputed = computed(() => {
+    return props.payments.filter(payment => payment.type === 'balance').length;
+});
+
+const debtPaymentsComputed = computed(() => {
+    return props.payments.filter(payment => payment.type === 'debt').length;
+});
 
 const formatDate = (dateString: string) => {
     if (!dateString) return '';
     try {
-        return new Date(dateString).toLocaleDateString('uz-UZ', {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            return 'Noma’lum sana';
+        }
+        return date.toLocaleDateString('uz-UZ', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
